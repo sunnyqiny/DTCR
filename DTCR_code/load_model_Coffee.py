@@ -168,7 +168,7 @@ class RNN_clustering_model(object):
             hidden = tf.nn.relu(tf.matmul(hidden_abstract, weight1) + bias1)
             output = tf.matmul(hidden, weight2) + bias2
             predict = tf.reshape(output, shape=[-1, 2])
-	    discriminative_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=predict, labels=real_fake_label))
+        discriminative_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=predict, labels=real_fake_label))
 
         with tf.name_scope("loss_total"):
             loss = loss_reconstruct + self.lamda / 2 * loss_k_means + discriminative_loss
@@ -216,26 +216,26 @@ def run_model(filename, config):
         sess.run(tf.global_variables_initializer())
         
         model_path = './Model/model.ckpt'
-	saver = tf.train.Saver()
-	saver.restore(sess, model_path)
-	 
-	test_total_abstract = sess.run(hidden_abstract,
-				feed_dict={input_tensors['inputs']: testing_data, 
-				input_tensors['noise']: test_noise_data
-				})
+    saver = tf.train.Saver()
+    saver.restore(sess, model_path)
+     
+    test_total_abstract = sess.run(hidden_abstract,
+                feed_dict={input_tensors['inputs']: testing_data, 
+                input_tensors['noise']: test_noise_data
+                })
 
-	test_hidden_val = np.array(test_total_abstract).reshape(-1, np.sum(config.hidden_size) * 2)
-        km = KMeans(n_clusters=num_classes)
-	km_idx = km.fit_predict(test_hidden_val)
-	ri, nmi, acc = utils.evaluation(prediction=km_idx, label=testing_label)
-	
+    test_hidden_val = np.array(test_total_abstract).reshape(-1, np.sum(config.hidden_size) * 2)
+    km = KMeans(n_clusters=num_classes)
+    km_idx = km.fit_predict(test_hidden_val)
+    ri, nmi, acc = utils.evaluation(prediction=km_idx, label=testing_label)
+    
 def main():
     config = Config()
     filename = './Coffee/Coffee_TEST'
     config.lamda = 1e-1
     config.hidden_size = [100,50,50]
     config.dilations = [1,2,4]
-	
+    
     run_model(filename, config)
 
 if __name__ == "__main__":
