@@ -21,8 +21,11 @@ def dRNN(cell, inputs, rate, scope='default'):
     n_steps = len(inputs)
     if rate < 0 or rate >= n_steps:
         raise ValueError('The \'rate\' variable needs to be adjusted.')
-    print "Building layer: %s, input length: %d, dilation rate: %d, input dim: %d." % (
-        scope, n_steps, rate, inputs[0].get_shape()[1])
+    #print "Building layer: %s, input length: %d, dilation rate: %d, input dim: %d." % (
+    #    scope, n_steps, rate, inputs[0].get_shape()[1])
+
+    print("Building layer: %s, input length: %d, dilation rate: %d, input dim: %d." % (
+        scope, n_steps, rate, inputs[0].get_shape()[1]))
 
     # make the length of inputs divide 'rate', by using zero-padding
     EVEN = (n_steps % rate) == 0
@@ -31,14 +34,14 @@ def dRNN(cell, inputs, rate, scope='default'):
         # This is used for zero padding
         zero_tensor = tf.zeros_like(inputs[0])
         dialated_n_steps = n_steps // rate + 1
-        print "=====> %d time points need to be padded. " % (
-            dialated_n_steps * rate - n_steps)
-        print "=====> Input length for sub-RNN: %d" % (dialated_n_steps)
+        print ("=====> %d time points need to be padded. " % (
+            dialated_n_steps * rate - n_steps))
+        print ("=====> Input length for sub-RNN: %d" % (dialated_n_steps))
         for i_pad in xrange(dialated_n_steps * rate - n_steps):
             inputs.append(zero_tensor)
     else:
         dialated_n_steps = n_steps // rate
-        print "=====> Input length for sub-RNN: %d" % (dialated_n_steps)
+        print ("=====> Input length for sub-RNN: %d" % (dialated_n_steps))
 
     # now the length of 'inputs' divide rate
     # reshape it in the format of a list of tensors
@@ -60,7 +63,7 @@ def dRNN(cell, inputs, rate, scope='default'):
     # reshape output back to the input format as a list of tensors with shape [batch_size, input_dims]
     # split each element of the outputs from size [batch_size*rate, input_dims] to 
     # [[batch_size, input_dims], [batch_size, input_dims], ...] with length = rate
-	#tf.split(output, rate, axis=0)
+    #tf.split(output, rate, axis=0)
     splitted_outputs = [tf.split(output, rate, axis=0)
                         for output in dilated_outputs]
     unrolled_outputs = [output
@@ -88,14 +91,14 @@ def multi_dRNN_with_dilations(cells, inputs, dilations):
     for cell, dilation in zip(cells, dilations):
         scope_name = "multi_dRNN_dilation_%d" % i
         i +=1
-        x= dRNN(cell, x, dilation, scope=scope_name)     		
+        x= dRNN(cell, x, dilation, scope=scope_name)            
         outputs.append(x)
         x_trans = tf.stack(x,axis=0) 
         x_trans = tf.transpose(x_trans, [1,0,2])  
         output.append(x_trans)
     return outputs,output
 
-	
+    
 def _contruct_cells(hidden_structs, cell_type):
     """
     This function contructs a list of cells.
