@@ -37,7 +37,7 @@ def dRNN(cell, inputs, rate, scope='default'):
         print ("=====> %d time points need to be padded. " % (
             dialated_n_steps * rate - n_steps))
         print ("=====> Input length for sub-RNN: %d" % (dialated_n_steps))
-        for i_pad in xrange(dialated_n_steps * rate - n_steps):
+        for i_pad in range(dialated_n_steps * rate - n_steps):
             inputs.append(zero_tensor)
     else:
         dialated_n_steps = n_steps // rate

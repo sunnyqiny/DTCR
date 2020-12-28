@@ -216,10 +216,10 @@ def run_model(filename, config):
         sess.run(tf.global_variables_initializer())
         
         model_path = './Model/model.ckpt'
-    saver = tf.train.Saver()
-    saver.restore(sess, model_path)
+        saver = tf.train.Saver()
+        saver.restore(sess, model_path)
      
-    test_total_abstract = sess.run(hidden_abstract,
+        test_total_abstract = sess.run(hidden_abstract,
                 feed_dict={input_tensors['inputs']: testing_data, 
                 input_tensors['noise']: test_noise_data
                 })
