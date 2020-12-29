@@ -197,8 +197,8 @@ def run_model(train_data_filename, config):
 
     train_data, train_label = utils.load_data(train_data_filename)
     
-    # config.batch_size = train_data.shape[0]
-    config.batch_size = 10
+    config.batch_size = train_data.shape[0]
+    # config.batch_size = 10
     config.num_steps = train_data.shape[1]
     config.embedding_size = 1
 
@@ -207,6 +207,7 @@ def run_model(train_data_filename, config):
 
     print('Label:', np.unique(train_label))
 
+
     with tf.Session(config=gpu_config) as sess:
         model = RNN_clustering_model(config=config)
         input_tensors, loss_tensors, real_hidden_abstract, F_update, output_tensor = model.build_model()
@@ -214,7 +215,7 @@ def run_model(train_data_filename, config):
 
         sess.run(tf.global_variables_initializer())
 
-        Epoch = 300
+        Epoch = 30
     
         for i in range(Epoch):
             # shuffle data and label
@@ -260,12 +261,16 @@ def run_model(train_data_filename, config):
             F_new = topk_evecs.T
             sess.run(F_update, feed_dict={input_tensors['F_new_value']: F_new})
 
+        saver = tf.train.Saver()
+        saver.save(sess, "model_test/beetlefly")
+
+
 
 def main():
     config = Config()
     # input your filename
     # filename = './Coffee/Coffee_TRAIN'
-    filename = './ArrowHead/ArrowHead_TRAIN'
+    filename = './BeetleFly/BeetleFly_TRAIN'
     lamda = 1e-1
     hidden_sizes = [100, 50, 50]
     dilations = [1, 2, 4]

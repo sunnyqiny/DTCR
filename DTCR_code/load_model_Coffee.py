@@ -215,7 +215,8 @@ def run_model(filename, config):
 
         sess.run(tf.global_variables_initializer())
         
-        model_path = './Model/model.ckpt'
+        # model_path = './Model/model.ckpt'
+        model_path = './model_test/beetlefly'
         saver = tf.train.Saver()
         saver.restore(sess, model_path)
      
@@ -231,7 +232,8 @@ def run_model(filename, config):
     
 def main():
     config = Config()
-    filename = './Coffee/Coffee_TEST'
+    # filename = './Coffee/Coffee_TEST'
+    filename = './BeetleFly/BeetleFly_TEST'
     config.lamda = 1e-1
     config.hidden_size = [100,50,50]
     config.dilations = [1,2,4]
